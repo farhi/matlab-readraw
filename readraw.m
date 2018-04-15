@@ -59,7 +59,7 @@ classdef readraw
 %  - delete      remove readraw references in imformats. Then use clear
 %  - imread      read a RAW image using DCRAW. Allow more options
 %  - imfinfo     read a RAW image metadata using DCRAW
-
+%
 %  Credits: 
 %  --------
 %

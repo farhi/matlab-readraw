@@ -75,4 +75,16 @@ Credits:
 - Reading RAW files into MATLAB and Displaying Them <http://www.rcsumner.net/raw_guide/>
 - RAW Camera File Reader by Bryan White 2016 <https://fr.mathworks.com/matlabcentral/fileexchange/7412-raw-camera-file-reader?focused=6779250&tab=function>
 
+Installation:
+-------------
+
+Copy the directory and navigate to it. Then type from the Matlab prompt:
+
+  ```matlab
+  addpath(pwd)
+  ```
+
+If DCRAW is not yet installed on the computer, you will need a C compiler.
+The DCRAW C source file (provided with READRAW) will be built and used.
+
 License: (c) E. Farhi, GPL2 (2018)
