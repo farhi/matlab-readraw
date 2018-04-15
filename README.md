@@ -1,6 +1,8 @@
 # matlab-readraw
 Read RAW camera images from within Matlab, using DCRAW
 
+![Image of READRAW](https://github.com/farhi/matlab-readraw/blob/master/readraw.jpg)
+
 The use of this class boils down to simply creating the object. Then, you
 may simply use the **imread** and **imfinfo** call as usual, and RAW files
 will magically be handled.
