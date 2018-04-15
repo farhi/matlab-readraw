@@ -24,6 +24,22 @@ function [im, info, output] = dcraw(exe, files, options)
   for index=1:numel(files)
     file = files{index};
     [p,f]= fileparts(file);
+    
+    % we first check if the output file already exists. If so we just read it.
+    flag_output = '';
+    for ext={'.tiff', '.pnm','.ppm','.pgm'}
+      out = fullfile(p, [f ext{1} ]);
+      if exist(out, 'file')
+        flag_output = out;
+        break
+      end
+    end
+    if ~isempty(flag_output)
+      im{end+1}   = imread(flag_output);
+      info{end+1} = imfinfo(flag_output);
+      output{end+1} = flag_output;
+      break
+    end
   
     cmd       = [ precmd exe ' ' sprintf('%s ', options{:}) file ];
     disp(cmd)
