@@ -14,12 +14,12 @@ In the following example, we just call **readraw** once, and then all is done
 with **imread** and **imfinfo** as you would do with other image formats.
 
   ```matlab
-  dc   = readraw;
-  im   = imread('file.RAW');
-  info = imfinfo('file.RAW'); % this creates a file.tiff
+  readraw;
+  im   = imread('file.RAW');  % this creates a file.tiff
+  info = imfinfo('file.RAW'); 
   delete('file.tiff');  % to save disk space
   ...
-  delete(dc); clear dc
+  delete(readraw);
   ```
   
 NOTES:
@@ -51,13 +51,13 @@ and if you wish to get also the output file name and some more information:
   
 Some useful DCRAW options are:
 
-- -T              write a TIFF file, and copy metadata in
-- -w -T -6 -q 3   use camera white balance, and best interpolation AHD
-- -a -T -6        use auto white balance
-- -i -v           print metadata
-- -z              set the generated image date to that of the camera
-- -n 100          remove noise using wavelets
-- -w              use white balance from camera or auto
+- -T:              write a TIFF file, and copy metadata in
+- -w -T -6 -q 3:   use camera white balance, and best interpolation AHD
+- -a -T -6:        use auto white balance
+- -i -v:           print metadata
+- -z:              set the generated image date to that of the camera
+- -n 100:          remove noise using wavelets
+- -w:              use white balance from camera or auto
 
 Methods:
 --------
@@ -71,7 +71,7 @@ Methods:
 Credits: 
 --------
 
-- DCRAW is a great tool <https://www.cybercom.net/~dcoffin/dcraw/>
+- **DCRAW** is a great tool <https://www.cybercom.net/~dcoffin/dcraw/>
 - Reading RAW files into MATLAB and Displaying Them <http://www.rcsumner.net/raw_guide/>
 - RAW Camera File Reader by Bryan White 2016 <https://fr.mathworks.com/matlabcentral/fileexchange/7412-raw-camera-file-reader?focused=6779250&tab=function>
 
@@ -82,6 +82,7 @@ Copy the directory and navigate to it. Then type from the Matlab prompt:
 
   ```matlab
   addpath(pwd)
+  readraw;
   ```
 
 If DCRAW is not yet installed on the computer, you will need a C compiler.

@@ -11,12 +11,12 @@ classdef readraw
 %  In the following example, we just call readraw once, and then all is done 
 %  with imread and imfinfo as you would do with other image formats.
 %
-%    dc   = readraw;
-%    im   = imread('file.RAW');
-%    info = imfinfo('file.RAW');  % this creates a file.tiff
+%    readraw;
+%    im   = imread('file.RAW');   % this creates a file.tiff
+%    info = imfinfo('file.RAW');  
 %    delete('file.tiff');         % to save disk space
 %    ...
-%    delete(dc); clear dc
+%    delete(readraw);
 %    
 %  NOTES:
 %  ------
