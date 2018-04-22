@@ -14,9 +14,12 @@ classdef readraw
 %    readraw;
 %    im   = imread('file.RAW');   % this creates a file.tiff
 %    info = imfinfo('file.RAW');  
-%    delete('file.tiff');         % to save disk space
+%    delete('file.tiff');         % to save disk space, if ever required
 %    ...
 %    delete(readraw);
+%
+%  The image is imported without applying any color/white balance adjustment,
+%  which corresponds with DCRAW options '-T -4 -t 0 -v'.
 %    
 %  NOTES:
 %  ------
@@ -25,7 +28,7 @@ classdef readraw
 %  location as the initial RAW file. This file is then read again by imread
 %  to actually get the image RGB channels. If you have created these files
 %  (which are each 146 Mb), you may either remove them, or further access
-%  them without requiring conversion.
+%  them without requiring conversion (which is then much faster).
 %
 %  Supported RAW camera image formats include:
 %
@@ -37,7 +40,7 @@ classdef readraw
 %    dc = readraw;
 %    im = imread(dc, 'file.RAW', '-a -T -6 -n 100');
 %    
-%  and if you wish to get also the output file name and some more information:
+%  and if you wish to get also the output file name and some EXIF information:
 %
 %    [im, info, output] = imread(dc, 'file.RAW', '-T');
 %    
@@ -50,11 +53,12 @@ classdef readraw
 %  -z              set the generated image date to that of the camera
 %  -n 100          remove noise using wavelets
 %  -w              use white balance from camera or auto
+%  -t 0            do not flip the image
 %
 %  Methods:
 %  --------
 %
-%  - readraw     class instantiation. No argument.
+%  - readraw     class instantiation. No argument
 %  - compile     check for DCRAW availability or compile it
 %  - delete      remove readraw references in imformats. Then use clear
 %  - imread      read a RAW image using DCRAW. Allow more options
@@ -147,7 +151,7 @@ classdef readraw
       %     same as above, and send specific DCRAW options, e.g. '-v -T'
       %     See <https://www.cybercom.net/~dcoffin/dcraw/>
       
-      if nargin < 3, options='-T -4 -v'; end
+      if nargin < 3, options='-T -4 -t 0 -v'; end
 
       [im, info, output] = dcraw(self.compiled, file, options);
     

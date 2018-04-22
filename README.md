@@ -22,7 +22,7 @@ with **imread** and **imfinfo** as you would do with other image formats.
   delete(readraw);
   ```
   
-The default DCRAW setting for the importation is '-T -4 -v' to get the raw data.
+The default DCRAW setting for the importation is '-T -4 -t 0 -v' to get the raw data.
 
 NOTES:
 ------
@@ -48,7 +48,7 @@ readraw class method 'imread' with options as 3rd argument e.g:
 and if you wish to get also the output file name and some more information:
 
   ```matlab
-  [im, info, output] = imread(dc, 'file.RAW', '-T');
+  [im, info, output] = imread(dc, 'file.RAW', '-T -4 -t 0 -v');
   ```
   
 Some useful DCRAW options are:
@@ -61,6 +61,7 @@ Some useful DCRAW options are:
 - -z              set the generated image date to that of the camera
 - -n 100          remove noise using wavelets
 - -w              use white balance from camera or auto
+- -t 0            do not flip the image
 
 Methods:
 --------
