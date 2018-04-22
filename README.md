@@ -17,11 +17,13 @@ with **imread** and **imfinfo** as you would do with other image formats.
   readraw;
   im   = imread('file.RAW');  % this creates a file.tiff
   info = imfinfo('file.RAW'); 
-  delete('file.tiff');  % to save disk space
+  delete('file.tiff');  % to save disk space, if ever needed
   ...
   delete(readraw);
   ```
   
+The default DCRAW setting for the importation is '-T -4 -v' to get the raw data.
+
 NOTES:
 ------
 
@@ -51,13 +53,14 @@ and if you wish to get also the output file name and some more information:
   
 Some useful DCRAW options are:
 
-- -T:              write a TIFF file, and copy metadata in
-- -w -T -6 -q 3:   use camera white balance, and best interpolation AHD
-- -a -T -6:        use auto white balance
-- -i -v:           print metadata
-- -z:              set the generated image date to that of the camera
-- -n 100:          remove noise using wavelets
-- -w:              use white balance from camera or auto
+- -T              write a TIFF file, and copy metadata in
+- -w -T -6 -q 3   use camera white balance, and best interpolation AHD
+- -a -T -6        use auto white balance
+- -T -4           use raw data, without color scaling, nor white balance
+- -i -v           print metadata
+- -z              set the generated image date to that of the camera
+- -n 100          remove noise using wavelets
+- -w              use white balance from camera or auto
 
 Methods:
 --------

@@ -147,7 +147,7 @@ classdef readraw
       %     same as above, and send specific DCRAW options, e.g. '-v -T'
       %     See <https://www.cybercom.net/~dcoffin/dcraw/>
       
-      if nargin < 3, options='-T -w -6 -v'; end
+      if nargin < 3, options='-T -4 -v'; end
 
       [im, info, output] = dcraw(self.compiled, file, options);
     
