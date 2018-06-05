@@ -76,6 +76,7 @@ classdef readraw
   properties
   
     compiled=[];
+    UserData=[];
     
   end
   
