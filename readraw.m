@@ -76,6 +76,7 @@ classdef readraw
   properties
   
     compiled=[];
+    UserData=[];
     
   end
   
@@ -109,6 +110,7 @@ classdef readraw
         formats(index) = rawFormat;
         imformats(formats);
       end
+      disp([ mfilename ': installed ReadRaw as loader for RAW camera images.' ]);
       
     end
     
