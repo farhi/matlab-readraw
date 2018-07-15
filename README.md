@@ -30,7 +30,7 @@ NOTES:
 NOTE: Each RAW file will be converted to a 16-bits TIFF one at the same
 location as the initial RAW file. This file is then read again by imread
 to actually get the image RGB channels. If you have created these files
-(which are each 146 Mb), you may either remove them, or further access
+(which are each 146 Mb for 6x4k images), you may either remove them, or further access
 them without requiring conversion.
 
 Supported RAW camera image formats include:
@@ -85,7 +85,7 @@ Installation:
 Copy the directory and navigate to it. Then type from the Matlab prompt:
 
   ```matlab
-  addpath(pwd)
+  addpath('path-to-readraw')
   readraw;
   ```
 
