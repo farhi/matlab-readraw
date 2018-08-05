@@ -34,7 +34,7 @@ function [im, info, output] = dcraw(exe, files, options)
         break
       end
     end
-    if ~isempty(flag_output) && isempty(strfind(options, '-i'))
+    if ~isempty(flag_output) && isempty(strfind(char(options), '-i'))
       im{end+1}   = imread(flag_output);
       info{end+1} = imfinfo(flag_output);
       output{end+1} = flag_output;
