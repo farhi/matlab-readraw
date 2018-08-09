@@ -37,7 +37,7 @@ Supported RAW camera image formats include:
 
 - RAW CRW CR2 KDC DCR MRW ARW NEF NRW DNG ORF PTX PEF RW2 SRW RAF KDC
 
-If you which to import the RAW files with specific DCRAW options, use the
+If you wish to import the RAW files with specific DCRAW options, use the
 readraw class method 'imread' with options as 3rd argument e.g:
 
   ```matlab
