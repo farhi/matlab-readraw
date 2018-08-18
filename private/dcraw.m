@@ -62,7 +62,11 @@ function [im, info, output] = dcraw(exe, files, options)
     for ext={'.tiff', '.pnm','.ppm','.pgm'}
       out = fullfile(p, [f ext{1} ]);
       if exist(out, 'file')
-        im{end+1}   = imread(out);
+        if  isempty(strfind(char(options), '-i'))
+          im{end+1}   = imread(out);
+        else
+          im{end+1} = [];
+        end
         flag_output = out;
         output{end+1} = out;
         break
