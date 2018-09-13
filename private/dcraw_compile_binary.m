@@ -18,8 +18,8 @@ function compiled = dcraw_compile_binary(compile)
       
     [status, result] = system([ precmd try_target{1} ]); % run from Matlab
 
-    if status == 1 && nargin == 0
-        % the executable is already there. No need to make it .
+    if status == 1 && nargin == 0 && ~isempty(strfind(result, 'Coffin'))
+        % the executable is already there. No need to make it.
         compiled = try_target{1};
         return
     end

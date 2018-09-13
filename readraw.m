@@ -27,8 +27,13 @@ classdef readraw
 %  NOTE: Each RAW file will be converted to a 16-bits TIFF one at the same
 %  location as the initial RAW file. This file is then read again by imread
 %  to actually get the image RGB channels. If you have created these files
-%  (which are each 146 Mb), you may either remove them, or further access
-%  them without requiring conversion (which is then much faster).
+%  (which are each 146 Mb for 4k images), you may either remove them, or 
+%  further access them without requiring conversion (which is then much faster).
+%
+%  If your disk storage is limited, use:
+%    readraw('clean');
+%    im = imread(raw_file);
+%  will remove the TIFF files after being read.
 %
 %  Supported RAW camera image formats include:
 %
@@ -77,18 +82,22 @@ classdef readraw
   
     compiled=[];
     UserData=[];
+    clean   =0;
     
   end
   
   methods
   
-    function self=readraw()
+    function self=readraw(cl)
       % readraw: read RAW camera files and return their information and image
       %
       %   readraw(): create the RAW file reader
       %     the RAW images can then be read using the usual imread and imfinfo
       
+      if nargin == 0, cl=0; else cl=1; end
+      
       self.compiled = compile(self); % find DCRAW executable
+      self.clean    = cl;
       
       % we add entries to the imformats registry
       formats = imformats;
@@ -156,6 +165,7 @@ classdef readraw
       if nargin < 3, options='-T -4 -t 0 -v'; end
 
       [im, info, output] = dcraw(self.compiled, file, options);
+      if self.clean, delete(output); end
     
     end % imread
     
