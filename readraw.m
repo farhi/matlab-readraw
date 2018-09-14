@@ -93,6 +93,7 @@ classdef readraw
       %
       %   readraw(): create the RAW file reader
       %     the RAW images can then be read using the usual imread and imfinfo
+      %   readraw('clean'): same as above, and remove temporary files
       
       if nargin == 0, cl=0; else cl=1; end
       
