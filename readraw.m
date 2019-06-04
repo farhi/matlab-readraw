@@ -30,10 +30,13 @@ classdef readraw
 %  (which are each 146 Mb for 4k images), you may either remove them, or 
 %  further access them without requiring conversion (which is then much faster).
 %
-%  If your disk storage is limited, use:
-%    readraw('clean');
+%  If your disk storage is limited, use (this is anyway the default):
+%    readraw clean;
 %    im = imread(raw_file);
 %  will remove the TIFF files after being read.
+%
+%  You may as well use 'tiff' to explicitly keep the TIFF files.
+%    readraw tiff
 %
 %  Supported RAW camera image formats include:
 %
@@ -88,17 +91,27 @@ classdef readraw
   
   methods
   
-    function self=readraw(cl)
+    function self=readraw(varargin)
       % readraw: read RAW camera files and return their information and image
       %
       %   readraw(): create the RAW file reader
       %     the RAW images can then be read using the usual imread and imfinfo
-      %   readraw('clean'): same as above, and remove temporary files
-      
-      if nargin == 0, cl=0; else cl=1; end
-      
+      %   readraw tiff      same as above, and keeps   temporary files
+      %   readraw clean     same as above, and removes temporary files (default)
+
       self.compiled = compile(self); % find DCRAW executable
-      self.clean    = cl;
+      
+      % check 'clean' 'tiff' options
+      for index=1:nargin
+        if ischar(varargin{index})
+          switch varargin{index}
+          case {'clean','purge'}
+            self.clean = 1;
+          case {'tiff','keep'}
+            self.clean = 0;
+          end
+        end
+      end
       
       % we add entries to the imformats registry
       formats = imformats;
@@ -179,6 +192,7 @@ classdef readraw
       %     read iteratively RAW files metainfo
     
       [~, info] = dcraw(self.compiled, file, '-v -i');
+      info.software = self.compiled;
       
     end % imfinfo
     

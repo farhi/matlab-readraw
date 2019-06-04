@@ -42,7 +42,6 @@ function [im, info, output] = dcraw(exe, files, options)
     end
   
     cmd       = [ precmd exe ' ' sprintf('%s ', options{:}) file ];
-    disp(cmd)
 
     % launch the command
     [status, result] = system([ cmd ]);
