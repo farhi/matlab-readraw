@@ -85,7 +85,7 @@ classdef readraw
   
     compiled=[];
     UserData=[];
-    clean   =0;
+    clean   =1;
     
   end
   
