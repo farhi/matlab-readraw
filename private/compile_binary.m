@@ -15,7 +15,7 @@ function [reader_raw,reader_exif] = dcraw_compile_binary(compile)
   % try with the libRAW mex from E. Segre. It must have been compiled previously.
   % https://fr.mathworks.com/matlabcentral/fileexchange/70985-matlab-unpackraw
   if exist('unpackRaw') == 3
-    reader_raw.read = @unpackRaw;
+    reader_raw.read = { @unpackRaw, 'color' };
   end
   
   % try in order: global(system), local, local_arch

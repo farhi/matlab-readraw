@@ -50,7 +50,11 @@ function [im, info, output] = read_raw(exe, files, options)
     end
     
     if isstruct(exe) && isfield(exe, 'read') % from imformats
-      im{end+1}   = feval(exe.read, file);
+      if iscell(exe.read)
+        im{end+1}   = feval(exe.read{1}, file, exe.read{2:end});
+      else
+        im{end+1}   = feval(exe.read, file);
+      end
       if isfield(exe, 'info')
         info{end+1} = feval(exe.info, file);
       else

@@ -182,7 +182,7 @@ classdef readraw
 
       [im, info, output] = read_raw(self.reader_raw, file, options); % private
       info.software = self.reader_raw;
-      if self.clean && exist(output, 'file')dc, , delete(output); end
+      if self.clean && exist(output, 'file'), delete(output); end
     
     end % imread
     

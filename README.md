@@ -116,7 +116,7 @@ sudo ln -s /usr/lib/libraw/dcraw_emu /usr/local/bin
 sudo ln -s /usr/lib/libraw/raw-identify /usr/local/bin
 ```
 
-To make use of the libraw direct reader (which is much faster than the others), you may have to compile the MeX file for your system by running:
+To make use of the libraw direct reader (which is slightly faster than the others), you may have to compile the MeX file for your system by running:
 ```
 cd path-to-readraw/private
 buildMexunpackRaw
