@@ -1,5 +1,5 @@
 classdef readraw
-%  Read RAW camera images from within Matlab, using DCRAW
+%  Read RAW camera images from within Matlab
 %
 %  The use of this class boils down to simply creating the object. Then, you
 %  may simply use the imread and imfinfo call as usual, and RAW files
@@ -66,11 +66,11 @@ classdef readraw
 %  Methods:
 %  --------
 %
-%  - readraw     class instantiation. No argument
-%  - compile     check for DCRAW availability or compile it
-%  - delete      remove readraw references in imformats. Then use clear
-%  - imread      read a RAW image using DCRAW. Allow more options
-%  - imfinfo     read a RAW image metadata using DCRAW
+%  - readraw     class instantiation. No argument.
+%  - compile     check for RAW reader availability or compile it.
+%  - delete      remove readraw references in imformats. Then use clear.
+%  - imread      read a RAW image. Allow more options.
+%  - imfinfo     read a RAW image metadata (EXIF).
 %
 %  Credits: 
 %  --------
@@ -83,23 +83,24 @@ classdef readraw
 
   properties
   
-    compiled=[];
-    UserData=[];
-    clean   =1;
+    reader_raw =[]; % executable to read RAW
+    reader_exif=[]; % executable to extract EXIF data
+    UserData   =[]; % user area
+    clean      =1;  % when true, clear temporary file
     
   end
   
   methods
   
     function self=readraw(varargin)
-      % readraw: read RAW camera files and return their information and image
+      % READRAW read RAW camera files and return their information and image
       %
       %   readraw(): create the RAW file reader
       %     the RAW images can then be read using the usual imread and imfinfo
       %   readraw tiff      same as above, and keeps   temporary files
       %   readraw clean     same as above, and removes temporary files (default)
 
-      self.compiled = compile(self); % find DCRAW executable
+      [self.reader_raw, self.reader_exif] = compile(self); % find DCRAW/libRAW executable
       
       % check 'clean' 'tiff' options
       for index=1:nargin
@@ -138,7 +139,7 @@ classdef readraw
     end
     
     function delete(self)
-      % delete: clear the image format registry for RAW images
+      % DELETE clear the image format registry for RAW images
       %
       %   use delete(self) and then clear(self)
       formats = imformats;
@@ -147,26 +148,27 @@ classdef readraw
       imformats(formats);
     end % delete
     
-    function compiled = compile(self, force)
-      % compile: test if DCRAW binary is requested and exists.
-      %   return the location of the DCRAW executable
+    function [reader_raw, reader_exif] = compile(self, force)
+      % COMPILE test if DCRAW/libRAW binary is requested and exists.
+      %   return the location of the RAW reader executable
       
       % test if bin is requested and exists, else compiles
       if nargin > 1
-           self.compiled = dcraw_compile_binary('compile'); % force
-      else self.compiled = dcraw_compile_binary; end
+           [self.reader_raw, self.reader_exif] = compile_binary('compile'); % force
+      else [self.reader_raw, self.reader_exif] = compile_binary; end
 
-      if isempty(self.compiled)
-        error('%s: ERROR: Can''t compile DCRAW executable (Binary).', ...
+      if isempty(self.reader_raw)
+        error('%s: ERROR: Can''t compile RAW reader executable (Binary).', ...
               mfilename);
       end
       
-      compiled = self.compiled;
+      reader_raw  = self.reader_raw;
+      reader_exif = self.reader_exif;
         
     end % compile
     
     function [im, info, output]=imread(self, file, options)
-      % imread: read a RAW file
+      % IMREAD read a RAW file
       %
       %   imread(self, file)
       %     read RAW file
@@ -178,21 +180,22 @@ classdef readraw
       
       if nargin < 3, options='-T -4 -t 0 -v'; end
 
-      [im, info, output] = dcraw(self.compiled, file, options);
-      if self.clean, delete(output); end
+      [im, info, output] = read_raw(self.reader_raw, file, options); % private
+      info.software = self.reader_raw;
+      if self.clean && exist(output, 'file')dc, , delete(output); end
     
     end % imread
     
     function info=imfinfo(self, file)
-      % imfinfo: read a RAW file metainfo (EXIF)
+      % IMFINFO read a RAW file metainfo (EXIF)
       %
       %   imfinfo(self, file)
       %     read RAW file metainfo
       %   imfinfo(self, { file1, file2, ...})
       %     read iteratively RAW files metainfo
     
-      [~, info] = dcraw(self.compiled, file, '-v -i');
-      info.software = self.compiled;
+      [info] = read_exif(self.reader_exif, file);
+      info.software = self.reader_raw;
       
     end % imfinfo
     

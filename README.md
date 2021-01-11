@@ -35,7 +35,25 @@ them without requiring conversion.
 
 Supported RAW camera image formats include:
 
-- RAW CRW CR2 KDC DCR MRW ARW NEF NRW DNG ORF PTX PEF RW2 SRW RAF KDC
+RAW File Format | Description
+-- | --
+CRW, CR2 | Canon digital camera RAW file formats
+NEF | Nikon digital camera RAW file format
+ORF | Olympus digital camera RAW file format
+RAF | Fuji digital camera RAW file format
+RWL | Leica camera RAW file format
+PEF, PTX | Pentax digital camera RAW file format
+X3F | Sigma digital camera RAW file format
+DCR, KDC, DC2, K25 | Kodak digital camera RAW file format
+SRF, ARW, MRW, MDC | Sony/Minolta digital camera RAW file format
+RAW | Panasonic, Casio, Leica digital camera RAW file format
+DNG (CS1, HDR) | Adobe RAW file format (Digital Negative)
+BAY | Casio RAW (Bayer)
+ERF | Epson digital camera RAW file format
+FFF | Imacon/Hasselblad RAW format
+MOS | CREO Photo RAW
+PXN | Fotoman RAW
+RDC | Ricoh RAW format
 
 If you wish to import the RAW files with specific DCRAW options, use the
 readraw class method 'imread' with options as 3rd argument e.g:
@@ -72,13 +90,6 @@ Methods:
 - **imread**      read a RAW image using DCRAW. Allow more options
 - **imfinfo**     read a RAW image metadata using DCRAW
 
-Credits: 
---------
-
-- **DCRAW** is a great tool <https://www.cybercom.net/~dcoffin/dcraw/>
-- Reading RAW files into MATLAB and Displaying Them <http://www.rcsumner.net/raw_guide/>
-- RAW Camera File Reader by Bryan White 2016 <https://fr.mathworks.com/matlabcentral/fileexchange/7412-raw-camera-file-reader?focused=6779250&tab=function>
-
 Installation:
 -------------
 
@@ -89,7 +100,38 @@ Copy the directory and navigate to it. Then type from the Matlab prompt:
   readraw;
   ```
 
-If DCRAW is not yet installed on the computer, you will need a C compiler.
-The DCRAW C source file (provided with READRAW) will be built and used.
+READRAW can use any of the following installed tools:
+
+- libraw (with header/include files)
+- dcraw
+- libraw binary tools (dcraw_emu, raw-identify, simple_dcraw)
+- exiv2
+- metacam
+- exifprobe
+
+which should be in the executable search path. These can be installed for Debian-like systems with:
+```
+sudo apt install dcraw libraw-bin exiv2 metacam exifprobe libraw-dev
+sudo ln -s /usr/lib/libraw/dcraw_emu /usr/local/bin
+sudo ln -s /usr/lib/libraw/raw-identify /usr/local/bin
+```
+
+To make use of the libraw direct reader (which is much faster than the others), you may have to compile the MeX file for your system by running:
+```
+cd path-to-readraw/private
+buildMexunpackRaw
+```
+which makes use of the excellent contribution from E. Segre.
+
+If no RAW reader is found, and DCRAW is not yet installed on the computer, you will need a C compiler.
+The DCRAW C source file (provided with READRAW, `private` directory) will be built and used.
+
+Credits: 
+--------
+
+- **DCRAW** is a great tool <https://www.cybercom.net/~dcoffin/dcraw/>
+- Reading RAW files into MATLAB and Displaying Them <http://www.rcsumner.net/raw_guide/>
+- RAW Camera File Reader by Bryan White 2016 <https://fr.mathworks.com/matlabcentral/fileexchange/7412-raw-camera-file-reader?focused=6779250&tab=function>
+- LibRaw MeX https://fr.mathworks.com/matlabcentral/fileexchange/70985-matlab-unpackraw and https://github.com/EastEriq/matlab-unpackRaw
 
 License: (c) E. Farhi, GPL2 (2018)

@@ -1,4 +1,12 @@
-function [im, info, output] = dcraw(exe, files, options)
+function [im, info, output] = read_raw(exe, files, options)
+  % READ_RAW Read the image data
+  %   READ_RAW(exe, file) reads 'file' with method 'exe'.
+  %
+  %   READ_RAW(exe, file, options) reads 'file' with method 'exe' passing 
+  %   additional 'options' as a string.
+  %
+  %  [IM, INFO, OUPUT] =READ_RAW(...) retuens the image data as IM, the EXIF 
+  %  data as INFO, and any temporary generated file as OUTPUT.
 
   % useful DCRAW options
   % -T              write a TIFF file, and copy metadata in
@@ -40,6 +48,17 @@ function [im, info, output] = dcraw(exe, files, options)
       output{end+1} = flag_output;
       break
     end
+    
+    if isstruct(exe) && isfield(exe, 'read') % from imformats
+      im{end+1}   = feval(exe.read, file);
+      if isfield(exe, 'info')
+        info{end+1} = feval(exe.info, file);
+      else
+        info{end+1} = [];
+      end
+      output{end+1} = '';
+      continue
+    end
   
     cmd       = [ precmd exe ' ' sprintf('%s ', options{:}) file ];
 
@@ -52,22 +71,34 @@ function [im, info, output] = dcraw(exe, files, options)
                ', saturation',          '; Scaling_Saturation:';
                'multipliers',           'Multipliers:';
                'Writing data to',       'Filename:';
-               ', and',                 ''};
+               ', and',                 '';
+               'Processing file',       'Source:';
+               'Writing file',          'Filename:'};
     for tokid = 1:size(tokens,1)
       result = strrep(result, tokens{tokid,1}, tokens{tokid,2});
     end
     info{end+1} = str2struct(result);
+    
+    % must wait for result. dcraw_emu writes files asynchronously
+    search_output = {};
+    if isfield(info{end},'Filename') && exist(info{end}.Filename, 'file')
+      search_output{end+1} = info{end}.Filename;
+    end
+    
     flag_output = '';
-    for ext={'.tiff', '.pnm','.ppm','.pgm'}
-      out = fullfile(p, [f ext{1} ]);
-      if exist(out, 'file')
+    
+    for ext=[ search_output ...
+      strcat(fullfile(p, f),  {'.tiff', '.pnm','.ppm','.pgm'}) ...
+      strcat(file,            {'.tiff', '.pnm','.ppm','.pgm'}) ]
+      
+      if exist(ext{1}, 'file')
         if  isempty(strfind(char(options), '-i'))
-          im{end+1}   = imread(out);
+          im{end+1}   = imread(ext{1});
         else
           im{end+1} = [];
         end
-        flag_output = out;
-        output{end+1} = out;
+        flag_output   = ext{1};
+        output{end+1} = ext{1};
         break
       end
     end
@@ -75,11 +106,11 @@ function [im, info, output] = dcraw(exe, files, options)
   end
   
   % single output ?
-  if numel(im) == 1
+  if iscell(im) && numel(im) == 1
     im     = im{1};
     info   = info{1};
     output = output{1};
   end
   
 
-end % dcraw
+end % read_raw
