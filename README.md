@@ -1,6 +1,9 @@
 # matlab-readraw
 Read RAW camera images from within Matlab, using DCRAW
 
+:warning: This project has been moved to Gitlab at https://gitlab.com/astrophotography/matlab-readraw
+ This Github repository will then be stalled.
+
 ![Image of READRAW](https://github.com/farhi/matlab-readraw/blob/master/readraw.jpg)
 
 The use of this class boils down to simply creating the object. Then, you
