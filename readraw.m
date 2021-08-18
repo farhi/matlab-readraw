@@ -151,10 +151,15 @@ classdef readraw
     function [reader_raw, reader_exif] = compile(self, force)
       % COMPILE test if DCRAW/libRAW binary is requested and exists.
       %   return the location of the RAW reader executable
+      %
+      %   COMPILE(READRAW,'force') force compiles unpackRaw and/or DCRAW
+      %
+      %   COMPILE(READRAW,'reader') selects the given reader, amongst
+      %   dcraw_emu, dcraw, simple_dcraw, unpackRaw, libraw
       
       % test if bin is requested and exists, else compiles
       if nargin > 1
-           [self.reader_raw, self.reader_exif] = compile_binary('compile'); % force
+           [self.reader_raw, self.reader_exif] = compile_binary(force); % force
       else [self.reader_raw, self.reader_exif] = compile_binary; end
 
       if isempty(self.reader_raw)
