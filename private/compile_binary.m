@@ -1,20 +1,35 @@
-function [reader_raw,reader_exif] = dcraw_compile_binary(compile)
+function [reader_raw,reader_exif] = compile_binary(compile)
   % search for DCRAW-like and EXIF reader
   % Compile dcraw as binary when does not exist yet.
+  %
+  % additional argument can be 'compile' or 'force'
+  % or a pattern to match executable, e.g. 
+  %   dcraw_emu, dcraw, simple_dcraw, unpackRaw, libraw
   
   reader_raw  = ''; 
   reader_exif = '';
   if nargin == 0, compile = ''; end
   if ismac,      precmd = 'DYLD_LIBRARY_PATH= ;';
   elseif isunix, precmd = 'LD_LIBRARY_PATH= ; '; 
-  else           precmd=''; end
+  else           precmd = ''; end
   
   if ispc, ext='.exe'; else ext=''; end
   this_path = fullfile(fileparts(which(mfilename)));
   
   % try with the libRAW mex from E. Segre. It must have been compiled previously.
   % https://fr.mathworks.com/matlabcentral/fileexchange/70985-matlab-unpackraw
-  if exist('unpackRaw') == 3
+  if any(strcmp(compile, {'force','compile'}))
+    p = pwd;
+    try
+      pdc = fullfile(fileparts(which('readraw')),'private');
+      cd (pdc);
+      buildMexunpackRaw;
+    catch ME
+      disp(getReport(ME));
+    end
+    cd(p)
+  end
+  if exist('unpackRaw') == 3 && (nargin ==0 || strcmpi(compile,'unpackRaw'))
     reader_raw.read = { @unpackRaw, 'color' };
   end
   
@@ -30,11 +45,16 @@ function [reader_raw,reader_exif] = dcraw_compile_binary(compile)
             fullfile('/usr/lib/libraw', [ 'simple_dcraw' ext ] ) }
         
       [status, result] = system([ precmd try_target{1} ]); % run from Matlab
-
-      if status == 1 && nargin == 0 && (~isempty(strfind(result, 'Coffin')) || ~isempty(strfind(result, 'emulator')))
-          % the executable is already there. No need to make it.
-          reader_raw = try_target{1};
-          break
+      if status == 1 && (~isempty(strfind(result, 'Coffin')) || ~isempty(strfind(result, 'emulator')))
+          if nargin == 0 || any(strcmp(compile, {'force','compile'}))
+            % the executable is already there. No need to make it.
+		        reader_raw = try_target{1};
+		        break
+          elseif ~isempty(strfind(try_target{1}, compile))
+            % match executable name.
+		        reader_raw = try_target{1};
+		        break
+          end
       end
     end
   end
